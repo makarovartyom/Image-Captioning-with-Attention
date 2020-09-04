@@ -1,4 +1,5 @@
 import string
+import re
 
 
 def punctuation_free(reference):
@@ -40,15 +41,15 @@ class GetStats:
         assert bleu_path == 'bleu.txt', "file must contain bleu scores and have a name 'bleu.txt'"
 
         train_file = open(log_train_path, "r")
-        train_logs = train_file.readlines()
+        self.train_logs = train_file.readlines()
         train_file.close()
 
         valid_file = open(log_valid_path, "r")
-        valid_logs = valid_file.readlines()
+        self.valid_logs = valid_file.readlines()
         valid_file.close()
 
         bleu_file = open("bleu.txt", "r")
-        bleu_score = bleu_file.readlines()
+        self.bleu_score = bleu_file.readlines()
         bleu_file.close()
 
     def get_train_loss(self):
@@ -61,7 +62,7 @@ class GetStats:
             losses.append(loss)
             perp = re.search('Perplexity train: (.*)\n', line).group(1)
             perplex.append(perp)
-        return lossses, perplex
+        return losses, perplex
 
     def get_valid_log(self):
         """Returns validation log from validation_log.txt file"""
