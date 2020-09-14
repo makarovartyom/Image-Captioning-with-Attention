@@ -8,19 +8,19 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 # Results
 
 ## Training vs Validation loss
-<br><br>
+<br>
 
 <img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/loss.png" width=380, height="320" align="center"/>
 <br><br>
 
 ## Training vs Validation perplexity
-<br><br>
+<br>
 
 <img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/perplex.png" width=380, height="320" align="center"/>
 <br><br>
 
 ## BLEU scores
-<br><br>
+<br>
 
 <img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=420, height="380" align="center"/>
 <br><br>
