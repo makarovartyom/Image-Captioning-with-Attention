@@ -31,10 +31,11 @@ class EncoderCNN(nn.Module):
 
 class DecoderRNN(nn.Module):
 
-    """Arguments:
+    """Attributes:
          - embedding_dim - specified size of embeddings;
          - hidden_dim - the size of RNN layer (number of hidden states)
          - vocab_size - size of vocabulary 
+         - p - dropout probability
     """
     def __init__(self, num_features, embedding_dim, hidden_dim, vocab_size, p =0.5):
 
@@ -71,7 +72,7 @@ class DecoderRNN(nn.Module):
          """
          Arguments
          ----------
-         - captions - image captions;
+         - captions - image captions
          - features - features returned from Encoder
          - sample_prob - use it for scheduled sampling
          
@@ -116,7 +117,16 @@ class DecoderRNN(nn.Module):
 
     def init_hidden(self, features):
 
-        """Initializes hidden state and cell memory using average feature vector"""
+        """Initializes hidden state and cell memory using average feature vector.
+        Arguments:
+        ----------
+        - features - features returned from Encoder
+    
+        Retruns:
+        ----------
+        - h0 - initial hidden state (short-term memory)
+        - c0 - initial cell state (long-term memory)
+        """
         mean_annotations = torch.mean(features, dim = 1)
         h0 = self.init_h(mean_annotations)
         c0 = self.init_c(mean_annotations)
