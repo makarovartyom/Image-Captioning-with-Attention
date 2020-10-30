@@ -107,9 +107,10 @@ class CoCoDataset(data.Dataset):
         if self.mode == 'train' or self.mode == 'valid':
             # JSON file, where the annotations are stored
             self.coco = COCO(annotations_file) 
-            # each annotatin contains multiple attributes, such as task (e.g. segmentation),
+            # each annotatin contains multiple attributes, such as task e.g. segmentation,
             # image_id, bounding box and etc.
-            # in order to load an image, for instance, image URL we will use self.coco.loadImgs(image_id) based on id of image
+            # in order to load an image, for instance, 
+            # image URL we will use self.coco.loadImgs(image_id) based on image id
             self.ids = list(self.coco.anns.keys())
             print('Obtaining caption lengths...')
             # get all_tokens - a big list of lists. Each is a list of tokens for specific caption
@@ -154,10 +155,8 @@ class CoCoDataset(data.Dataset):
 
         # obtain image if in test mode
         elif self.mode == 'valid':
-            #path = self.paths[index]
             ann_id = self.ids[index]
-            # Convert image to tensor and pre-process using transform
-            
+            # Convert image to tensor and pre-process using transform           
             caption = self.coco.anns[ann_id]['caption']
             img_id = self.coco.anns[ann_id]['image_id']
             path = self.coco.loadImgs(img_id)[0]['file_name']
@@ -193,11 +192,10 @@ class CoCoDataset(data.Dataset):
     def get_indices(self):
         # randomly select the caption length from the list of lengths
         sel_length = np.random.choice(self.caption_lengths)
-        # retrieve the indices of captions with length as specified above
         all_indices = np.where([self.caption_lengths[i] == sel_length for i in np.arange(len(self.caption_lengths))])[0]
         # select m = batch_size captions from list above
         indices = list(np.random.choice(all_indices, size=self.batch_size))
-        # return the batch of captions indices
+        # return the caption indices of specified batch
         return indices
 
     def __len__(self):
