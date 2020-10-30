@@ -73,9 +73,9 @@ def get_loader(transform,
                           img_folder=img_folder)
 
     if mode == 'train' or mode == 'valid':
-        # Randomly sample a caption length and indices with that length.
-        indices = dataset.get_train_indices()
-        # Create and assign a batch sampler to retrieve a batch with the sampled indices.
+        # Randomly sample a caption length and indices of that length
+        indices = dataset.get_indices()
+        # Create and assign a batch sampler to retrieve a batch with the sampled indices
         # functionality from torch.utils
         initial_sampler = data.sampler.SubsetRandomSampler(indices=indices)
         data_loader = data.DataLoader(dataset=dataset, 
@@ -115,8 +115,7 @@ class CoCoDataset(data.Dataset):
             # get all_tokens - a big list of lists. Each is a list of tokens for specific caption
             all_tokens = [nltk.tokenize.word_tokenize(str(self.coco.anns[self.ids[index]]['caption']).lower()) for index in tqdm(np.arange(len(self.ids)))]
             # list of token lengths (number of words for each caption)
-            self.caption_lengths = [len(token) for token in all_tokens]
-            
+            self.caption_lengths = [len(token) for token in all_tokens]           
         else:
             # if we are in testing mode
             test_info = json.loads(open(annotations_file).read())
@@ -191,7 +190,7 @@ class CoCoDataset(data.Dataset):
             # return original image and pre-processed image tensor
             return orig_image, image
 
-    def get_train_indices(self):
+    def get_indices(self):
         # randomly select the caption length from the list of lengths
         sel_length = np.random.choice(self.caption_lengths)
         # retrieve the indices of captions with length as specified above
