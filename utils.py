@@ -1,5 +1,4 @@
 import string
-import re
 
 
 def punctuation_free(reference):
@@ -31,14 +30,14 @@ def get_hypothesis(terms_idx, data_loader):
     return hypothesis_list
 
 class GetStats:
-    """Class for getting statistics ffrom text training/validation files"""
-    def __init__(self, log_train_path, log_vali_path, bleu_path):
+    """Class for getting statistics from text training/validation files"""
+    def __init__(self, log_train_path, log_valid_path, bleu_path):
         self.log_train_path = log_train_path
         self.log_valid_path = log_valid_path
         self.bleu_path = bleu_path
-        assert log_train_path == 'training_log.txt', "file must contain training logs and have a name 'training_log.txt'"
-        assert log_valid_path == 'validation_log.txt', "file must contain validation logs and a name 'validation_log.txt'"
-        assert bleu_path == 'bleu.txt', "file must contain bleu scores and have a name 'bleu.txt'"
+        assert log_train_path == 'training_log.txt', "file must contain training logs named 'training_log.txt'"
+        assert log_valid_path == 'validation_log.txt', "file must contain validation logs named 'validation_log.txt'"
+        assert bleu_path == 'bleu.txt', "file must contain bleu scores named 'bleu.txt'"
 
         train_file = open(log_train_path, "r")
         self.train_logs = train_file.readlines()
@@ -52,17 +51,17 @@ class GetStats:
         self.bleu_score = bleu_file.readlines()
         bleu_file.close()
 
-    def get_train_loss(self):
+    def get_train_log(self):
         """Returns training log from training_log.txt file"""
-        losses=[]
-        perplex=[]
-        #assert self.log_file_path == 'training_log.txt', "Outputs training log only. For vailidation loss or BLEU score use get_valid_loss and get_bleu."
+        losses = []
+        perplex =[]
         for line in self.train_logs:
             loss = re.search('Loss train: (.*), Perplexity train:', line).group(1)
             losses.append(loss)
-            perp = re.search('Perplexity train: (.*)\n', line).group(1)
+            perp = re.search('Perplexity train: (.*)', line).group(1)
             perplex.append(perp)
         return losses, perplex
+
 
     def get_valid_log(self):
         """Returns validation log from validation_log.txt file"""
@@ -71,7 +70,7 @@ class GetStats:
         for line in self.valid_logs:
             loss = re.search('Loss valid: (.*), Perplexity valid:', line).group(1)
             losses.append(loss)
-            perp = re.search('Perplexity valid: (.*)\n', line).group(1)
+            perp = re.search('Perplexity valid: (.*)', line).group(1)
             perplex.append(perp)
         return losses, perplex
 
@@ -92,6 +91,6 @@ class GetStats:
             bleu_3 = re.search('BLEU-3: (.*), BLEU-4:', line).group(1)
             bleu_3_scores.append(bleu_3)
 
-            bleu_4 = re.search('BLEU-4: (.*)\n', line).group(1)
+            bleu_4 = re.search('BLEU-4: (.*)', line).group(1)
             bleu_4_scores.append(bleu_4)
         return bleu_1_scores, bleu_2_scores, bleu_3_scores, bleu_4_scores
