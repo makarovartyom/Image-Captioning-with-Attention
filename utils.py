@@ -1,4 +1,6 @@
 import string
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def punctuation_free(reference):
