@@ -1,3 +1,9 @@
+import torch
+import torch.nn as nn
+import numpy as np
+import torch.nn.functional as F
+
+
 class BeamSearch():
     """Class performs the caption generation using Beam search.
     
@@ -5,6 +11,11 @@ class BeamSearch():
     ----------
     - decoder - trained Decoder of captioning model
     - features - feature map outputed from Encoder
+    
+    Returns:
+    --------
+    - sentence - generated caption
+    - final_scores - cummulative scores for produced sequences
     """
     def __init__(self, decoder, features, k, max_sentence):
         
@@ -28,7 +39,7 @@ class BeamSearch():
         
         
     def beam_search_step(self):
-        """Function performs a single step of beam search"""
+        """Function performs a single step of beam search, returning start input"""
         top_idx_temp = []
         top_score_temp = []
         hiddens_temp = []
@@ -81,14 +92,13 @@ class BeamSearch():
         return  self.start_input
     
     def get_cummulative_score(self, cum_score):
-        
-        # getting the top scores and indices from cum_score
+        """Getting the top scores and indices from cum_score"""
         top_cum_scores, _ = cum_score.flatten().topk(self.k)
         return top_cum_scores
         
     
     def get_ready_idx(self, top_cum_scores, top_idx_temp, cum_score):
-        
+        """Obtain a list of ready indices and their positions"""
         # got the list of top positions 
         tensor_positions = [torch.where(cum_score == top_cum_scores[i]) for i in range(self.k)]
         # it's important to sort the tensor_positions by first entries (rows)
@@ -100,19 +110,19 @@ class BeamSearch():
         
         
     def get_positions(self, tensor_positions):
-
-        # create a tensor of row positions
+        """Retruns the row positions for tensors"""
         row_pos = [x[0] for x in tensor_positions]
         row_pos = torch.cat(row_pos, dim =0)
         return row_pos
     
     def get_nonend_tokens(self):
+        """Get tokens that are not <end>"""
         non_end_token = self.start_input[0][-1] !=1
         return non_end_token.flatten()
         
 
     def update_start_input(self, ready_idx, row_pos, top_cum_scores):      
-        
+        """Returns new input sequences"""
         # construct new sequence with respect to the row positions
         start_input_new = [x[row_pos] for x in self.start_input[0]]
         self.start_input[0] = start_input_new 
@@ -124,12 +134,15 @@ class BeamSearch():
         self.start_input[1] = top_cum_scores.detach()
         
     def update_hiddens(self, row_pos):
+        """Returns new hidden states"""
         self.hiddens = [[x[i] for i in row_pos.tolist()] for x in self.hiddens]
         
     def update_step(self):
+        """Updates step"""
         self.step += 1
     
     def generate_caption(self):
+        """Iterates over the sequences and generates final caption"""
         while True:
             # make a beam search step 
             self.start_input = self.beam_search_step()
@@ -168,7 +181,7 @@ class BeamSearch():
                 
             
     def get_top_sequence(self):
-        
+        """Gets the sentence and final set of scores""""
         lengths = [len(i) for i in self.complete_seqs[0]]
         final_scores = [self.complete_seqs[1][i] / lengths[i] for i in range(len(lengths))]
         best_score = np.argmax([i.item() for i in final_scores])
