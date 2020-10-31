@@ -30,15 +30,13 @@ class EncoderCNN(nn.Module):
         return features
 
 class DecoderRNN(nn.Module):
-
     """Attributes:
-         - embedding_dim - specified size of embeddings;
-         - hidden_dim - the size of RNN layer (number of hidden states)
-         - vocab_size - size of vocabulary 
-         - p - dropout probability
+    - embedding_dim - specified size of embeddings;
+    - hidden_dim - the size of RNN layer (number of hidden states)
+    - vocab_size - size of vocabulary 
+    - p - dropout probability
     """
     def __init__(self, num_features, embedding_dim, hidden_dim, vocab_size, p =0.5):
-
         super(DecoderRNN, self).__init__()
         
         self.num_features = num_features
@@ -66,21 +64,19 @@ class DecoderRNN(nn.Module):
         # Source: https://arxiv.org/pdf/1502.03044.pdf
         self.init_h = nn.Linear(num_features, hidden_dim)
         self.init_c = nn.Linear(num_features, hidden_dim)
-
+    
     def forward(self, captions, features, sample_prob = 0.0):
-        
-         """
-         Arguments
-         ----------
-         - captions - image captions
-         - features - features returned from Encoder
-         - sample_prob - use it for scheduled sampling
+        """Arguments
+        ----------
+        - captions - image captions
+        - features - features returned from Encoder
+        - sample_prob - use it for scheduled sampling
          
-         Returns
-         ----------
-         - outputs - output logits from t steps
-         - atten_weights - weights from attention network
-         """
+        Returns
+        ----------
+        - outputs - output logits from t steps
+        - atten_weights - weights from attention network
+        """
         # create embeddings for captions of size (batch, sqe_len, embed_dim)
         embed = self.embeddings(captions)
         h, c = self.init_hidden(features)
@@ -147,6 +143,7 @@ class DecoderRNN(nn.Module):
         """
         
         sentence = []
+        weights = []
         input_word = torch.tensor(0).unsqueeze(0).to(device)
         h, c = self.init_hidden(features)
         while True:
@@ -160,51 +157,54 @@ class DecoderRNN(nn.Module):
             scoring = F.log_softmax(output, dim=1)
             top_idx = scoring[0].topk(1)[1]
             sentence.append(top_idx.item())
+            weights.append(atten_weight)
             input_word = top_idx
             if (len(sentence) >= max_sentence or top_idx == 1):
                 break
-        return sentence
+        return sentence, weights
     
-    class BahdanauAttention(nn.Module):
-        """ Class performs Additive Bahdanau Attention.
-        Source: https://arxiv.org/pdf/1409.0473.pdf
+    
+class BahdanauAttention(nn.Module):
+    """ Class performs Additive Bahdanau Attention.
+    Source: https://arxiv.org/pdf/1409.0473.pdf
      
-        """    
-        def __init__(self, num_features, hidden_dim, output_dim = 1):
-            super(BahdanauAttention, self).__init__()
-            self.num_features = num_features
-            self.hidden_dim = hidden_dim
-            self.output_dim = output_dim
-            # fully-connected layer to learn first weight matrix Wa
-            self.W_a = nn.Linear(self.num_features, self.hidden_dim)
-            # fully-connected layer to learn the second weight matrix Ua
-            self.U_a = nn.Linear(self.hidden_dim, self.hidden_dim)
-            # fully-connected layer to produce score (output), learning weight matrix va
-            self.v_a = nn.Linear(self.hidden_dim, self.output_dim)
+    """    
+    def __init__(self, num_features, hidden_dim, output_dim = 1):
+        super(BahdanauAttention, self).__init__()
+        self.num_features = num_features
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        # fully-connected layer to learn first weight matrix Wa
+        self.W_a = nn.Linear(self.num_features, self.hidden_dim)
+        # fully-connected layer to learn the second weight matrix Ua
+        self.U_a = nn.Linear(self.hidden_dim, self.hidden_dim)
+        # fully-connected layer to produce score (output), learning weight matrix va
+        self.v_a = nn.Linear(self.hidden_dim, self.output_dim)
                 
-        def forward(self, features, decoder_hidden):
-            """
-            Arguments:
-            ----------
-            - features - features returned from Encoder
-            - decoder_hidden - hidden state output from Decoder
+    def forward(self, features, decoder_hidden):
+        """
+        Arguments:
+        ----------
+        - features - features returned from Encoder
+        - decoder_hidden - hidden state output from Decoder
                 
-            Returns:
-            ---------
-            - context - context vector with a size of (1,2048)
-            - atten_weight - probabilities, express the feature relevance
-            """
-            # add additional dimension to a hidden (required for summation)
-            decoder_hidden = decoder_hidden.unsqueeze(1)
-            atten_1 = self.W_a(features)
-            atten_2 = self.U_a(decoder_hidden)
-            # apply tangent to combine result from 2 fc layers
-            atten_tan = torch.tanh(atten_1+atten_2)
-            atten_score = self.v_a(atten_tan)
-            atten_weight = F.softmax(atten_score, dim = 1)
-            # first, we will multiply each vector by its softmax score
-            # next, we will sum up this vectors, producing the attention context vector
-            # the size of context equals to a number of feature maps
-            context = torch.sum(atten_weight * features,  dim = 1)
-            atten_weight = atten_weight.squeeze(dim=2)
-            return context, atten_weight
+        Returns:
+        ---------
+        - context - context vector with a size of (1,2048)
+        - atten_weight - probabilities, express the feature relevance
+        """
+        # add additional dimension to a hidden (required for summation)
+        decoder_hidden = decoder_hidden.unsqueeze(1)
+        atten_1 = self.W_a(features)
+        atten_2 = self.U_a(decoder_hidden)
+        # apply tangent to combine result from 2 fc layers
+        atten_tan = torch.tanh(atten_1+atten_2)
+        atten_score = self.v_a(atten_tan)
+        atten_weight = F.softmax(atten_score, dim = 1)
+        # first, we will multiply each vector by its softmax score
+        # next, we will sum up this vectors, producing the attention context vector
+        # the size of context equals to a number of feature maps
+        context = torch.sum(atten_weight * features,  dim = 1)
+        atten_weight = atten_weight.squeeze(dim=2)
+            
+        return context, atten_weight
