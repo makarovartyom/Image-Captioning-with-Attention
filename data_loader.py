@@ -44,8 +44,6 @@ def get_loader(transform,
         if vocab_from_file==True: assert os.path.exists(vocab_file), "vocab_file does not exist.  Change vocab_from_file to False to create vocab_file."
         img_folder = os.path.join(path, 'images', 'train2014')
         annotations_file = os.path.join(path, 'annotations', 'captions_train2014.json')
-        #img_folder = '/home/makarovartyom/udacity-image-captioning/train2014/'
-        #annotations_file = '/home/makarovartyom/udacity-image-captioning/annotations/captions_train2014.json'
         
     elif mode == 'valid':
         assert os.path.exists(vocab_file), "Must first generate vocab.pkl from training data."
@@ -53,18 +51,12 @@ def get_loader(transform,
         img_folder = os.path.join(path, 'images', 'val2014')
         annotations_file = os.path.join(path, 'annotations', 'captions_val2014.json')
         
-        #img_folder = '/home/makarovartyom/udacity-image-captioning/val2014/'
-        #annotations_file = '/home/makarovartyom/udacity-image-captioning/annotations/captions_val2014.json'
-        
     elif mode == 'test':
-        assert batch_size==1, "Please change batch_size to 1 if testing your model."
+        assert batch_size==1, "Please change batch_size to 1 for testing your model."
         assert os.path.exists(vocab_file), "Must first generate vocab.pkl from training data."
         assert vocab_from_file==True, "Change vocab_from_file to True."
         img_folder = os.path.join(path, 'images', 'test2014')
         annotations_file = os.path.join(path, 'annotations', 'image_info_test2014.json')
-        
-        #img_folder = '/home/makarovartyom/udacity-image-captioning/test2014/'
-        #annotations_file = os.path.join(cocoapi_loc, '/home/makarovartyom/udacity-image-captioning/annotations/image_info_test2014.json')
         
 
     # COCO caption dataset.
@@ -80,27 +72,13 @@ def get_loader(transform,
                           vocab_from_file=vocab_from_file,
                           img_folder=img_folder)
 
-    if mode == 'train':
-        # Randomly sample a caption length, and sample indices with that length.
-        # returns batch of captions' indices of random length
-        indices = dataset.get_train_indices()
-        # Create and assign a batch sampler to retrieve a batch with the sampled indices.
-        # function from Torch.utils
+    if mode == 'train' or mode == 'valid':
+        # Randomly sample a caption length and indices of that length
+        indices = dataset.get_indices()
+        # Create and assign a batch sampler to retrieve a batch with the sampled indices
+        # functionality from torch.utils
         initial_sampler = data.sampler.SubsetRandomSampler(indices=indices)
-        # data loader for COCO dataset.¨
-        # data loader for train dataset with specified batch. 
-        # Recall, the length of batch captions will be random
-        # to access the data from Data Loader, you need to use data_loader.dataset attribute
         data_loader = data.DataLoader(dataset=dataset, 
-                                      num_workers=num_workers,
-                                      batch_sampler=data.sampler.BatchSampler(sampler=initial_sampler,
-                                                                              batch_size=dataset.batch_size,
-                                                                              drop_last=False))
-    elif mode == 'valid':
-        indices = dataset.get_train_indices()
-        initial_sampler = data.sampler.SubsetRandomSampler(indices=indices)
-        
-        data_loader = data.DataLoader(dataset=dataset,                                  
                                       num_workers=num_workers,
                                       batch_sampler=data.sampler.BatchSampler(sampler=initial_sampler,
                                                                               batch_size=dataset.batch_size,
@@ -128,20 +106,17 @@ class CoCoDataset(data.Dataset):
         # if training and validation
         if self.mode == 'train' or self.mode == 'valid':
             # JSON file, where the annotations are stored
-            # equivalent to coco_caps = COCO(captions_annFile) in 0_Dataset.ipynb
-            self.coco = COCO(annotations_file)
-            # equivalent to ids = list(coco.anns.keys()) in 0_Dataset.ipynb
-            # self.ids is a list of 291875 ids of annotations 
-            # each annotatin contains multiple attributes, such as task (e.g. segmentation),
+            self.coco = COCO(annotations_file) 
+            # each annotatin contains multiple attributes, such as task e.g. segmentation,
             # image_id, bounding box and etc.
-            # in order to load an image, for instance, image URL we will use self.coco.loadImgs(image_id) based on id of image
+            # in order to load an image, for instance, 
+            # image URL we will use self.coco.loadImgs(image_id) based on image id
             self.ids = list(self.coco.anns.keys())
             print('Obtaining caption lengths...')
-            # get all_tokens - a big list of lists. Each list is a list of lower case tokens (words) for specific caption
+            # get all_tokens - a big list of lists. Each is a list of tokens for specific caption
             all_tokens = [nltk.tokenize.word_tokenize(str(self.coco.anns[self.ids[index]]['caption']).lower()) for index in tqdm(np.arange(len(self.ids)))]
             # list of token lengths (number of words for each caption)
-            self.caption_lengths = [len(token) for token in all_tokens]
-            
+            self.caption_lengths = [len(token) for token in all_tokens]           
         else:
             # if we are in testing mode
             test_info = json.loads(open(annotations_file).read())
@@ -174,21 +149,14 @@ class CoCoDataset(data.Dataset):
             caption.extend([self.vocab(token) for token in tokens])
             caption.append(self.vocab(self.vocab.end_word))
             caption = torch.Tensor(caption).long()
-
             # return pre-processed image and caption tensors
             # image pre-processed with tranformer applied
             return image, caption
 
         # obtain image if in test mode
         elif self.mode == 'valid':
-            #path = self.paths[index]
             ann_id = self.ids[index]
-
-            # Convert image to tensor and pre-process using transform
-            #PIL_image = Image.open(os.path.join(self.img_folder, path)).convert('RGB')
-            #orig_image = np.array(PIL_image)
-            #image = self.transform(PIL_image)
-            
+            # Convert image to tensor and pre-process using transform           
             caption = self.coco.anns[ann_id]['caption']
             img_id = self.coco.anns[ann_id]['image_id']
             path = self.coco.loadImgs(img_id)[0]['file_name']
@@ -221,14 +189,13 @@ class CoCoDataset(data.Dataset):
             # return original image and pre-processed image tensor
             return orig_image, image
 
-    def get_train_indices(self):
-        # randomly select the caption length from list of lengths
+    def get_indices(self):
+        # randomly select the caption length from the list of lengths
         sel_length = np.random.choice(self.caption_lengths)
-        # retrieve the indices of captions with length as specified above
         all_indices = np.where([self.caption_lengths[i] == sel_length for i in np.arange(len(self.caption_lengths))])[0]
         # select m = batch_size captions from list above
         indices = list(np.random.choice(all_indices, size=self.batch_size))
-        # return the batch of captions indices
+        # return the caption indices of specified batch
         return indices
 
     def __len__(self):

@@ -1,3 +1,4 @@
+
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -188,6 +189,7 @@ class BahdanauAttention(nn.Module):
         - features - features returned from Encoder
         - decoder_hidden - hidden state output from Decoder
                 
+<<<<<<< HEAD
         Returns:
         ---------
         - context - context vector with a size of (1,2048)
@@ -208,3 +210,44 @@ class BahdanauAttention(nn.Module):
         atten_weight = atten_weight.squeeze(dim=2)
             
         return context, atten_weight
+||||||| f986b0b
+            Returns:
+            ---------
+            - context - context vector with a size of (1,2048)
+            - atten_weight - probabilities, express the feature relevance
+            """
+            # add additional dimension to a hidden (required for summation)
+            decoder_hidden = decoder_hidden.unsqueeze(1)
+            atten_1 = self.W_a(features)
+            atten_2 = self.U_a(decoder_hidden)
+            # apply tangent to combine result from 2 fc layers
+            atten_tan = torch.tanh(atten_1+atten_2)
+            atten_score = self.v_a(atten_tan)
+            atten_weight = F.softmax(atten_score, dim = 1)
+            # first, we will multiply each vector by its softmax score
+            # next, we will sum up this vectors, producing the attention context vector
+            # the size of context equals to a number of feature maps
+            context = torch.sum(atten_weight * features,  dim = 1)
+            atten_weight = atten_weight.squeeze(dim=2)
+            return context, atten_weight
+=======
+            Returns:
+            ---------
+            - context - context vector with a size of (1,2048)
+            - atten_weight - probabilities, express the feature relevance
+            """
+            # add additional dimension to a hidden (required for summation)
+            decoder_hidden = decoder_hidden.unsqueeze(1)
+            atten_1 = self.W_a(features)
+            atten_2 = self.U_a(decoder_hidden)
+            # apply tangent to combine result from 2 fc layers
+            atten_tan = torch.tanh(atten_1+atten_2)
+            atten_score = self.v_a(atten_tan)
+            atten_weight = F.softmax(atten_score, dim = 1)
+            # first, we will multiply each vector by its softmax score
+            # next, we will sum up this vectors, producing the attention context vector
+            # the size of context equals to a number of feature maps
+            context = torch.sum(atten_weight * features,  dim = 1)
+            atten_weight = atten_weight.squeeze(dim=2)
+            return context, atten_weight
+>>>>>>> 650e9484e988aec921b65cfaa151f4355563f601
