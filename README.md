@@ -41,5 +41,5 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 ### Visual attention
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_plot2.PNG" width=620, height="380" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_plot2.PNG" width=650, height="380" align="center"/>
 <br><br>
