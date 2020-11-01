@@ -22,7 +22,7 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 ## BLEU scores
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=500, height="420" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=530, height="420" align="center"/>
 <br><br>
 
 
@@ -30,16 +30,16 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 ### Caption generation
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_1.png" width=420, height="380" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_1.PNG" width=420, height="380" align="center"/>
 <br><br>
 
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_2.png" width=420, height="380" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_2.PNG" width=420, height="380" align="center"/>
 <br><br>
 
 ### Visual attention
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_1.png" width=620, height="380" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_1.PNG" width=620, height="380" align="center"/>
 <br><br>
