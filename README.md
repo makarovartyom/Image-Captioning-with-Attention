@@ -10,19 +10,19 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 ## Training vs Validation loss
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/loss.png" width=450, height="340" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/loss.png" width=460, height="340" align="center"/>
 <br><br>
 
 ## Training vs Validation perplexity
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/perplex.png" width=450, height="340" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/perplex.png" width=460, height="340" align="center"/>
 <br><br>
 
 ## BLEU scores
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=530, height="420" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=540, height="420" align="center"/>
 <br><br>
 
 
@@ -41,5 +41,5 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 ### Visual attention
 <br>
 
-<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_1.PNG" width=620, height="380" align="center"/>
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_plot2.PNG" width=620, height="380" align="center"/>
 <br><br>
