@@ -1,0 +1,13 @@
+Avg. Loss valid: 3.8215, Avg. Perplexity valid: 46.1992,     BLEU-1: 0.63, BLEU-2: 0.40, BLEU-3: 0.22, BLEU-4: 0.10
+Avg. Loss valid: 3.6111, Avg. Perplexity valid: 37.5567,     BLEU-1: 0.64, BLEU-2: 0.42, BLEU-3: 0.23, BLEU-4: 0.12
+Avg. Loss valid: 3.5273, Avg. Perplexity valid: 34.6440,     BLEU-1: 0.66, BLEU-2: 0.44, BLEU-3: 0.25, BLEU-4: 0.13
+Avg. Loss valid: 3.4508, Avg. Perplexity valid: 32.1061,     BLEU-1: 0.66, BLEU-2: 0.44, BLEU-3: 0.26, BLEU-4: 0.13
+Avg. Loss valid: 3.4204, Avg. Perplexity valid: 31.2509,     BLEU-1: 0.67, BLEU-2: 0.45, BLEU-3: 0.26, BLEU-4: 0.14
+Avg. Loss valid: 3.3737, Avg. Perplexity valid: 29.8266,     BLEU-1: 0.66, BLEU-2: 0.44, BLEU-3: 0.25, BLEU-4: 0.13
+Avg. Loss valid: 3.3928, Avg. Perplexity valid: 30.5286,     BLEU-1: 0.67, BLEU-2: 0.46, BLEU-3: 0.27, BLEU-4: 0.15
+Avg. Loss valid: 3.3464, Avg. Perplexity valid: 29.1420,     BLEU-1: 0.68, BLEU-2: 0.46, BLEU-3: 0.28, BLEU-4: 0.15
+Avg. Loss valid: 3.3500, Avg. Perplexity valid: 29.2627,     BLEU-1: 0.67, BLEU-2: 0.45, BLEU-3: 0.27, BLEU-4: 0.14
+Avg. Loss valid: 3.3524, Avg. Perplexity valid: 29.3939,     BLEU-1: 0.68, BLEU-2: 0.45, BLEU-3: 0.27, BLEU-4: 0.15
+Avg. Loss valid: 3.3310, Avg. Perplexity valid: 28.7548,     BLEU-1: 0.68, BLEU-2: 0.45, BLEU-3: 0.27, BLEU-4: 0.14
+Avg. Loss valid: 3.3047, Avg. Perplexity valid: 28.0145,     BLEU-1: 0.68, BLEU-2: 0.45, BLEU-3: 0.27, BLEU-4: 0.14
+Avg. Loss valid: 3.2827, Avg. Perplexity valid: 27.3849,     BLEU-1: 0.68, BLEU-2: 0.46, BLEU-3: 0.28, BLEU-4: 0.15
