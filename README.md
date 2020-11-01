@@ -24,3 +24,22 @@ Image Dataset (images and captions) - [MS COCO](https://cocodataset.org/#home).
 
 <img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/bleu.png" width=420, height="380" align="center"/>
 <br><br>
+
+
+## Examples
+### Caption generation
+<br>
+
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_1.png" width=420, height="380" align="center"/>
+<br><br>
+
+<br>
+
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/example_2.png" width=420, height="380" align="center"/>
+<br><br>
+
+### Visual attention
+<br>
+
+<img src="https://github.com/MakarovArtyom/Image-Captioning-with-Attention/blob/master/assets/attention_1.png" width=420, height="380" align="center"/>
+<br><br>
