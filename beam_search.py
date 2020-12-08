@@ -173,7 +173,7 @@ class BeamSearch():
                 self.complete_seqs[1].extend(complete_score) 
             else:
                 pass
-            if (len(self.complete_seqs[0])>=3 or self.step == self.max_sentence):
+            if (len(self.complete_seqs[0])>=self.k or self.step == self.max_sentence):
                 break
         
         return self.get_top_sequence()
@@ -181,7 +181,7 @@ class BeamSearch():
                 
             
     def get_top_sequence(self):
-        """Gets the sentence and final set of scores""""
+        """Gets the sentence and final set of scores"""
         lengths = [len(i) for i in self.complete_seqs[0]]
         final_scores = [self.complete_seqs[1][i] / lengths[i] for i in range(len(lengths))]
         best_score = np.argmax([i.item() for i in final_scores])
